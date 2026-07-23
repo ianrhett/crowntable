@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Studio. The Agency Process</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--canvas:#F3F2ED;--paper:#FBFAF7;--ink:#171B1F;--faded:#5A5F66;--rule:#D9D5CA;--brass:#8A6F3E;--navy:#1F3A5F}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--canvas);color:var(--ink);font-family:'Source Sans 3','Helvetica Neue',sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:52px 40px 96px;display:grid;grid-template-columns:230px 1fr;gap:56px}
+main{max-width:640px}
+h1{font-family:'Libre Caslon Text',Georgia,serif;font-weight:400;font-size:44px;line-height:1.14}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);margin-bottom:14px;font-weight:600}
+.eyebrow.navy{color:var(--navy)}
+.lede{font-size:17.5px;line-height:1.65;margin-top:26px}
+.lede+.lede{margin-top:16px}
+.rule{height:1px;background:var(--rule);margin:28px 0}
+.note{font-size:15px;line-height:1.6;color:var(--faded)}
+.note strong{color:var(--ink)}
+.btnrow{margin-top:36px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+button{font-family:inherit;font-size:15px;font-weight:600;letter-spacing:.03em;padding:13px 26px;cursor:pointer;background:transparent;color:var(--navy);border:1.5px solid var(--navy);border-radius:2px}
+button.primary{background:var(--navy);color:var(--paper)}
+button:focus,textarea:focus{outline:2px solid var(--navy);outline-offset:2px}
+.brand{font-family:'Libre Caslon Text',serif;font-size:17px;font-weight:700;margin-bottom:26px}
+.brand span{display:block;font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:600;color:var(--brass);letter-spacing:.16em;text-transform:uppercase;margin-top:4px}
+.mod{display:flex;align-items:flex-start;gap:10px;padding:9px 0}
+.mod.locked{opacity:.42}
+.dot{width:9px;height:9px;margin-top:5px;flex-shrink:0;border:1.5px solid var(--faded);border-radius:50%}
+.mod.done .dot{background:var(--brass);border:none;border-radius:0}
+.mod.active .dot{background:var(--navy);border:1.5px solid var(--navy)}
+.mname{font-size:13.5px;font-weight:600;letter-spacing:.02em}
+.mod.active .mname{color:var(--navy);font-weight:700}
+.mq{font-size:12.5px;color:var(--faded);margin-top:1px}
+.saved{font-size:12px;color:var(--brass);margin-top:12px;visibility:hidden}
+.card{background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--brass);padding:26px 28px;margin-top:30px}
+.card h2{font-family:'Libre Caslon Text',serif;font-size:26px;font-weight:700}
+.card .dom{font-size:16px;color:var(--navy);font-weight:600;margin-top:6px}
+.card .body{font-size:14.5px;line-height:1.7;color:var(--faded)}
+.card .stamp{font-size:13px;color:var(--brass);margin-top:16px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.qhelp{font-size:16px;line-height:1.65;color:var(--faded);margin-top:18px}
+textarea{width:100%;margin-top:22px;padding:18px 20px;font-family:inherit;font-size:16.5px;line-height:1.6;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:2px;resize:vertical;min-height:170px}
+.count{font-size:13px;color:var(--faded)}
+.mic{display:flex;align-items:center;gap:10px;padding:13px 20px}
+.mic.on{background:var(--brass);border-color:var(--brass);color:var(--paper)}
+.micdot{width:9px;height:9px;border-radius:50%;background:currentColor}
+.mic.on .micdot{animation:pulse 1.1s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.rb{background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--rule);padding:16px 20px;margin-bottom:12px;cursor:pointer}
+.rb.filled{border-left-color:var(--brass)}
+.rb .q{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faded)}
+.rb .a{font-size:15.5px;line-height:1.55;margin-top:7px}
+.rb .a.empty{color:var(--faded);font-style:italic}
+.foot{font-size:13.5px;color:var(--faded);margin-top:20px;line-height:1.6}
+@media(max-width:860px){.wrap{display:block;padding:28px 20px 64px}h1{font-size:32px}aside{margin-bottom:26px}.ledger{display:flex;overflow-x:auto;padding-bottom:6px}.mod{align-items:center;padding:6px 14px 6px 0;white-space:nowrap}.dot{margin-top:0}.mq{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<aside>
+<div class="brand">The Agency<span>Process ledger</span></div>
+<div class="ledger" id="ledger"></div>
+<div class="saved" id="saved">Saved.</div>
+</aside>
+<main id="main"></main>
+</div>
+<script>
+const KEY="agency-ps-module2-v1";
+const MODULES=[[0,"Intake","Who are you, and what do you want to exist?","done"],[1,"Naming","What is it called, and can you own the name?","done"],[2,"Positioning","What is the one true sentence?","active"],[3,"Audience","Who exactly, and what truth drives them?","locked"],[4,"Voice","How does it sound?","locked"],[5,"Visual direction","How does it look and feel?","locked"],[6,"Messaging","What does the page say?","locked"],[7,"Blueprint","The whole strategy, signed.","locked"],[8,"Production","The studio builds.","locked"]];
+const QS=[
+{id:"avoids",eb:"Question one of six",p:"What does your buyer most want to avoid?",h:"The therapist arriving at Practice Studio carries a specific set of fears. Name them. Not what they want. What they are trying not to become, not to look like, not to feel.",ph:"They are afraid of..."},
+{id:"strength",eb:"Question two of six",p:"What is your buyer's greatest strength?",h:"The thing they are better at than almost anyone. The instrument they bring that your process must honor, not replace.",ph:"They are extraordinary at..."},
+{id:"transformation",eb:"Question three of six",p:"What transformation are you actually selling?",h:"Not the deliverables. The before and the after. Who are they on the day they arrive, and who are they on the day the studio hands them the keys?",ph:"They arrive as... and leave as..."},
+{id:"embodiment",eb:"Question four of six",p:"Who or what stands behind this promise?",h:"Accountability has a face. When a therapist trusts Practice Studio with their practice, whose judgment are they trusting, and how present is that person?",ph:"Behind this stands..."},
+{id:"thirty",eb:"Question five of six",p:"In the first thirty seconds, what must they believe?",h:"They land on practicestudio.io cold. Before a single word of copy is read closely, what impression must the room itself give?",ph:"Within thirty seconds they should feel..."},
+{id:"sentence",eb:"Question six of six",p:"Say what Practice Studio is in one sentence.",h:"Plain words. If a therapist repeated this sentence to a colleague over coffee, it should survive intact.",ph:"Practice Studio is..."},
+{id:"onliness",eb:"The onliness statement",p:"Practice Studio is the only ______ that ______ for ______.",h:"The narrowest true claim. One category, one difference, one audience. If a competitor could sign the same sentence, sharpen it.",ph:"The only ... that ... for ..."}];
+let state={screen:"process",answers:{}};
+QS.forEach(q=>state.answers[q.id]="");
+try{const s=localStorage.getItem(KEY);if(s){const d=JSON.parse(s);if(d.answers)Object.assign(state.answers,d.answers);if(d.screen)state.screen=d.screen}}catch(e){}
+let saveT=null;
+function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify({schema:KEY,answers:state.answers,screen:state.screen,savedAt:new Date().toISOString()}));const el=document.getElementById("saved");el.style.visibility="visible";setTimeout(()=>el.style.visibility="hidden",1400)}catch(e){}},500)}
+function go(s){stopMic();state.screen=s;save();render();window.scrollTo(0,0)}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null,micOn=false,baseText="";
+function stopMic(){if(rec){try{rec.stop()}catch(e){}rec=null}micOn=false}
+function toggleMic(qid){
+ if(micOn){stopMic();render();return}
+ if(!SR){alert("Voice input needs Chrome or Edge over HTTPS.");return}
+ const ta=document.getElementById("ta");baseText=ta.value;
+ rec=new SR();rec.continuous=true;rec.interimResults=true;rec.lang="en-US";
+ rec.onresult=e=>{let fin="",inter="";for(let i=0;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)fin+=t;else inter+=t}
+  const joined=(baseText+(baseText&&(fin||inter)?" ":"")+fin+inter).replace(/\s+/g," ");
+  ta.value=joined;state.answers[qid]=joined;save()};
+ rec.onend=()=>{if(micOn){baseText=document.getElementById("ta").value;try{rec.start()}catch(e){micOn=false;render()}}};
+ rec.onerror=()=>{};
+ micOn=true;rec.start();render()}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function ledger(){document.getElementById("ledger").innerHTML=MODULES.map(m=>`<div class="mod ${m[3]}"><div class="dot"></div><div><div class="mname">${m[0]}. ${m[1]}</div><div class="mq">${m[2]}</div></div></div>`).join("")}
+function record(){const lines=QS.map(q=>`**${q.p}**\n${state.answers[q.id].trim()||"(unanswered)"}`).join("\n\n");return`## Module 2: Positioning. Practice Studio (client zero)\n\nInstrument: ${KEY}. Completed ${new Date().toISOString().slice(0,10)}.\n\n${lines}\n\n---\nNext module on signature: Module 3, Audience.`}
+function render(){
+ const M=document.getElementById("main");
+ if(state.screen==="process"){M.innerHTML=`
+  <div class="eyebrow">Client zero: Practice Studio</div>
+  <h1>What goes in is you.<br>What comes out is your practice.</h1>
+  <p class="lede">This is the Agency's process. It is not access to a machine. It is a sequence of short, careful conversations, refined over decades of brand and design practice, that moves an idea from a name to a finished platform. Each module asks one kind of question. Each module ends with a short written record you approve before the next one opens.</p>
+  <p class="lede">Nothing is designed before it is positioned. Nothing is written before it is aimed. The order is the method.</p>
+  <div class="rule"></div>
+  <p class="note"><strong>How a session works.</strong> One question per screen. Speak your answer with the microphone, or type, or both. Your answers are read back to you before anything is locked. Everything autosaves; leave and return freely.</p>
+  <div class="btnrow"><button class="primary" onclick="go('module1')">Review Module 1: Naming</button><button onclick="go('q0')">Begin Module 2: Positioning</button></div>`}
+ else if(state.screen==="module1"){M.innerHTML=`
+  <div class="eyebrow">Module 1 of 8. Complete.</div>
+  <h1 style="font-size:38px">Naming: the record.</h1>
+  <div class="card"><h2>Practice Studio</h2><div class="dom">practicestudio.io</div><div class="rule" style="margin:20px 0"></div>
+  <div class="body">Named for what the buyer is building, in the buyer's own language: a studio that stands up a practice. Verified available by DNS on 2026-07-22 and taken to registration. The .ai and .com forms are held by others; the record notes practice-studio.io and practicestudio.co as defensive candidates.</div>
+  <div class="stamp">Signed and locked. 2026-07-22</div></div>
+  <div class="btnrow"><button class="primary" onclick="go('q0')">Begin Module 2: Positioning</button><button onclick="go('process')">Back to the process</button></div>`}
+ else if(state.screen.startsWith("q")){
+  const i=parseInt(state.screen.slice(1));const q=QS[i];
+  M.innerHTML=`
+  <div class="eyebrow">${q.eb}</div>
+  <h1 style="font-size:36px">${q.p}</h1>
+  <p class="qhelp">${q.h}</p>
+  <textarea id="ta" placeholder="${q.ph}"></textarea>
+  <div class="btnrow">
+   <button class="mic ${micOn?'on':''}" id="micbtn" onclick="toggleMic('${q.id}')"><span class="micdot"></span>${micOn?"Listening. Tap to stop":"Speak your answer"}</button>
+  </div>
+  <div class="btnrow" style="margin-top:20px">
+   <button class="primary" onclick="go('${i+1<QS.length?'q'+(i+1):'readback'}')">${i+1<QS.length?"Next question":"Read it back to me"}</button>
+   <button onclick="go('${i===0?'process':'q'+(i-1)}')">Back</button>
+   <span class="count">${i+1} of ${QS.length}</span>
+  </div>`;
+  const ta=document.getElementById("ta");ta.value=state.answers[q.id];
+  ta.addEventListener("input",()=>{state.answers[q.id]=ta.value;save()})}
+ else if(state.screen==="readback"){
+  const done=QS.filter(q=>state.answers[q.id].trim()).length;
+  M.innerHTML=`
+  <div class="eyebrow navy">The read-back</div>
+  <h1 style="font-size:38px">Here is what you said.</h1>
+  <p class="qhelp">${done} of ${QS.length} answered. Nothing locks until you copy the record and post it to the ledger. Tap any answer to revise it.</p>
+  <div style="margin-top:26px">${QS.map((q,i)=>`<div class="rb ${state.answers[q.id].trim()?'filled':''}" onclick="go('q${i}')"><div class="q">${q.p}</div><div class="a ${state.answers[q.id].trim()?'':'empty'}">${state.answers[q.id].trim()?esc(state.answers[q.id].trim()):"Unanswered. Tap to answer."}</div></div>`).join("")}</div>
+  <div class="rule"></div>
+  <div class="btnrow">
+   <button class="primary" id="copybtn" onclick="copyRec()">Copy record for the ledger</button>
+   <button onclick="dlJSON()">Export JSON</button>
+   <button onclick="go('process')">Back to the process</button>
+  </div>
+  <p class="foot">The copied record is formatted to post as a comment on the strategy of record. Signature there closes Module 2 and opens Module 3: Audience.</p>`}
+}
+function copyRec(){navigator.clipboard.writeText(record()).then(()=>{const b=document.getElementById("copybtn");b.textContent="Copied.";setTimeout(()=>b.textContent="Copy record for the ledger",1600)})}
+function dlJSON(){const blob=new Blob([JSON.stringify({schema:KEY,client:"Practice Studio",answers:state.answers,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download="practicestudio-module2-positioning.json";a.click();URL.revokeObjectURL(u)}
+ledger();render();
+</script>
+</body>
+</html>
